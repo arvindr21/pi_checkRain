@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Is it raining?</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+    * {
+        text-transform: uppercase;
+    }
+    .disp-none {
+        display: none;
+    }
+    body {
+        background: skyblue;
+        color: white;
+    }
+    .img {
+        margin-top: -39px;
+    }
+    .night {
+        background: #aaa;
+    }
+    </style>
+
+</head>
+
+<body>
+    <h1 class="text-center">Is It Raining Arvind?</h1>
+    <hr/>
+    <div class="container text-center">
+        <h2 class="yes disp-none">Yes Mom, It is raining </h2>
+        <h2 class="no disp-none">No Mom, It is not raining </h2>
+        <!-- http://codepen.io/noahblon/full/lxukH/ -->
+        <img src="/sunfill.svg" id="sunFill" class="disp-none">
+        <img src="/cloudrain.svg" id="cloudRain" class="disp-none">
+        <img src="/moon.svg" id="moon" class="disp-none">
+
+        <br/>
+        <input type="button" class="btn btn-default btn-block btn-lg" value="Check Again">
+    </div>
+
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript">
+    $(function() {
+
+        function ampm() {
+            var hours = new Date().getHours();
+            var _ampm = 'am';
+            if (hours > 18) { // after 6pm show as evening
+                _ampm = 'pm';
+            }
+            return _ampm;
+        }
+
+
+
+        function updateStatus() {
+            $('.disp-none').hide();
+            $.getJSON('/status', function(status) {
+                if (status.status) {
+                    $('.yes').show();
+                    $('#cloudRain').show();
+                    if (ampm() == 'am') {
+                        $('body').removeClass('night');
+                    } else {
+                        $('body').addClass('night');
+                    }
+                } else {
+                    $('.no').show();
+                    if (ampm() == 'am') {
+                        $('#sunFill').show();
+                        $('body').removeClass('night');
+                    } else {
+                        $('#moon').show();
+                        $('body').addClass('night');
+                    }
+                }
+            });
+        }
+
+        $('.btn').on('click', function() {
+            updateStatus();
+        });
+        updateStatus()
+            // $('.disp-none').show();
+    });
+    </script>
+</body>
+
+</html>
